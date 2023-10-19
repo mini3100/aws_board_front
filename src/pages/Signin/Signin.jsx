@@ -26,8 +26,8 @@ function Signin(props) {
     const handleSigninClick = async () => {
         try {
             const response = await instance.post("/auth/signin", signinUser);
-            localStorage.setItem("accessToken", "Bearer " + response.data);
-            window.location.replace("/");
+            localStorage.setItem("accessToken", "Bearer " + response.data); // 토큰을 만들어와서 localStorage에 저장
+            window.location.replace("/");   // home으로 이동
         } catch (error) {
             if(error.response.status == 401) {
                 alert(error.response.data.authError);

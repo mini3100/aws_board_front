@@ -24,7 +24,7 @@ function Sidebar(props) {
     const queryClient = useQueryClient();
 
     // 상위의 App.js에서 사용한 QueryClient 가져옴(전역 상태)
-    const principalState = queryClient.getQueryState("getPrincipal");
+    const principalState = queryClient.getQueryState("getPrincipal");   // key값을 통해 해당 상태를 가져옴.
 
     const handleSigninClick = () => {
         navigate("/auth/signin");
@@ -32,6 +32,8 @@ function Sidebar(props) {
 
     const handleLogoutClick = () => {
         localStorage.removeItem("accessToken"); // localStorage의 토큰을 지움 -> 로그아웃
+        // navigate : 상태 비교해서 다른 부분만 렌더링 -> app.js에서 토큰을 검사하는 코드가 실행되지 않음(로그아웃 안 됨)
+        // window.location.replace : 전부 렌더링(새로고침)
         window.location.replace("/");
     }
 
@@ -55,8 +57,6 @@ function Sidebar(props) {
                     </div>
                 </div>
             ) }
-            
-            
         </div>
     );
 }
