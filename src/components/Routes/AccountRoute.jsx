@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 import Mypage from '../../pages/Mypage/Mypage';
+import EditPassword from '../../pages/EditPassword/EditPassword';
 
 function AccountRoute(props) {
     const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ function AccountRoute(props) {
     return (
         <Routes>
             <Route path='mypage' element={ <Mypage /> } />
-            <Route path='password' element={ <></> } />
+            <Route path='password' element={ <EditPassword /> } />
         </Routes>
     );
 }

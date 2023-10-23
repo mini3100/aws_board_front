@@ -3,7 +3,7 @@ import React from 'react';
 import { css } from '@emotion/react';
 import Sidebar from '../Sidebar/Sidebar';
 
-const rpptContainer = css`
+const rootContainer = css`
     display: flex;
     width: 100%;
     height: 100%;
@@ -11,15 +11,16 @@ const rpptContainer = css`
 
 const mainContainer = css`
     flex-grow: 1;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #DFDDCF;
     border-radius: 10px;
     padding: 20px;
     height: 100%;
+    background-color: white;
 `;
 
 function RootContainer({ children }) {
     return (
-        <div css={rpptContainer}>
+        <div css={rootContainer}>
             <Sidebar />
             <div css={mainContainer}>
                 { children }

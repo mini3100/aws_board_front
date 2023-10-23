@@ -8,10 +8,11 @@ const header = css`
     justify-content: center;
     align-items: center;
     margin: 20px 0px;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #DFDDCF;
     border-radius: 10px;
     width: 100%;
     height: 80px;
+    background-color: white;
 
     & > a {
         color: black;

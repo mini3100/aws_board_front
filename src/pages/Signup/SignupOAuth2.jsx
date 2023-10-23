@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { instance } from '../../api/config/instance';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { useEffect } from 'react';
 
 const layout = css`
     display: flex;
@@ -21,14 +22,25 @@ const layout = css`
     }
 `
 
-function Signup(props) {
+function SignupOAuth2(props) {
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!window.confirm("등록되지 않은 간편로그인 사용자입니다. 회원등록 하시겠습니까?")) {
+            window.location.replace("/auth/signin");
+        }
+    }, []);
+    
 
     const user = {
         email: "",
         password: "",
-        name: "",
-        nickname: ""
+        name: searchParams.get("name"),
+        nickname: "",
+        oauth2Id: searchParams.get("oauth2Id"),
+        profileImg: searchParams.get("profileImg"),
+        provider: searchParams.get("provider")
     }
 
     const [ signupUser, setSignupUser ] = useState(user);
@@ -58,7 +70,7 @@ function Signup(props) {
             <h2>회원가입</h2>
             <div><input type="text" name='email' placeholder='이메일' onChange={handleInputChange}/></div>
             <div><input type="password" name='password' placeholder='비밀번호' onChange={handleInputChange}/></div>
-            <div><input type="text" name='name' placeholder='이름' onChange={handleInputChange}/></div>
+            <div><input type="text" name='name' placeholder='이름' disabled={true} value={signupUser.name}/></div>
             <div><input type="text" name='nickname' placeholder='닉네임' onChange={handleInputChange}/></div>
             <div><button onClick={handleSignupSubmit}>가입하기</button></div>
             <div><button onClick={handleSigninClick}>로그인</button></div>
@@ -66,4 +78,4 @@ function Signup(props) {
     );
 }
 
-export default Signup;
+export default SignupOAuth2;

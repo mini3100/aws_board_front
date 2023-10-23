@@ -1,3 +1,27 @@
+* {
+  box-sizing: border-box;
+  color: #4d2e07;
+}
+
+html {
+  background-color: #fff1e4;
+}
+
+button {
+  margin: 2px 5px;
+  padding: 3px 5px;
+  border: 1px solid #DFDDCF;
+  border-radius: 5px;
+  background-color: #fff5ca;
+  cursor: pointer;
+}
+
+input {
+  margin: 2px 5px;
+  padding: 3px 5px;
+  width: 183px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
