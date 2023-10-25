@@ -59,9 +59,19 @@ function SignupOAuth2(props) {
     const handleSignupSubmit = async () => {
         try {
             const response = await instance.post("/auth/signup", signupUser);
-            navigate("/auth/signin");
+            alert("회원가입 완료");
+            window.location.replace("auth/signin");
         } catch (error) {
             console.log(error);
+            if(Object.keys(error.response.data).includes("email")) {    // 이메일 중복 오류 (이미 해당 이메일로 가입한 유저가 있을 경우)
+                // 계정 통합 권유
+                if(window.confirm(`해당 이메일로 가입된 계정이 있습니다.\n${signupUser.provider} 계정과 연결하시겠습니까?`)) {
+                    // 계정 통합 페이지 이동
+                    navigate(`/auth/oauth2/signup/merge?oauth2Id=${signupUser.oauth2Id}&email=${signupUser.email}&provider=${signupUser.provider}`)
+                }
+            } else if(Object.keys(error.response.data).includes("nickname")) {
+                alert("이미 사용중인 닉네임입니다. 다시 입력하세요.");
+            }
         }
     }
 

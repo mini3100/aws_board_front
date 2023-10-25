@@ -8,22 +8,16 @@ const header = css`
     justify-content: center;
     align-items: center;
     margin: 20px 0px;
-    border: 1px solid #DFDDCF;
     border-radius: 10px;
     width: 100%;
     height: 80px;
-    background-color: white;
-
-    & > a {
-        color: black;
-        text-decoration: none;
-    }
+    background-color: #ffd7a2;
 `;
 
 function Header(props) {
     return (
         <div css={header}>
-            <Link to={"/"}><h1>게시판 프로젝트</h1></Link>
+            <Link to={"/"}><h1>Board Project</h1></Link>
         </div>
     );
 }

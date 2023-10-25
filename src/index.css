@@ -14,12 +14,24 @@ button {
   border-radius: 5px;
   background-color: #fff5ca;
   cursor: pointer;
+
+  &:disabled {
+    background-color: #d8d0ab;
+    color: white;
+    cursor: default;
+  }
 }
 
 input {
   margin: 2px 5px;
-  padding: 3px 5px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  padding: 5px;
   width: 183px;
+}
+
+a {
+  text-decoration: none;
 }
 
 body {
