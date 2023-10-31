@@ -62,7 +62,7 @@ function SignupOAuth2(props) {
             alert("회원가입 완료");
             window.location.replace("auth/signin");
         } catch (error) {
-            console.log(error);
+            console.error(error);
             if(Object.keys(error.response.data).includes("email")) {    // 이메일 중복 오류 (이미 해당 이메일로 가입한 유저가 있을 경우)
                 // 계정 통합 권유
                 if(window.confirm(`해당 이메일로 가입된 계정이 있습니다.\n${signupUser.provider} 계정과 연결하시겠습니까?`)) {

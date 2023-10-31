@@ -118,7 +118,10 @@ function Sidebar(props) {
                         </li>
                     </Link>
                     {categories.map(categoryObj => {
-                        return  <Link to={`/board/${categoryObj.boardCategoryName}/1`} key={categoryObj.boardCategoryId}>
+                        return  <Link 
+                                    to={`/board/${categoryObj.boardCategoryName}/1`} 
+                                    key={categoryObj.boardCategoryId} 
+                                    reloadDocument={true}>
                                     <li className={category === categoryObj.boardCategoryName ? 'selected' : ''}>
                                         {categoryObj.boardCategoryName} ({categoryObj.boardCount})
                                     </li>

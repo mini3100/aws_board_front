@@ -20,6 +20,9 @@ button {
     color: white;
     cursor: default;
   }
+  &:active {
+    background-color: #fceeb3;
+  }
 }
 
 input {
@@ -32,6 +35,8 @@ input {
 
 a {
   text-decoration: none;
+  color: rgb(177, 106, 25);
+  font-weight: 500;
 }
 
 body {

@@ -49,7 +49,7 @@ function Signup(props) {
             const response = await instance.post("/auth/signup", signupUser);
             navigate("/auth/signin");
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

@@ -8,7 +8,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from '../../api/firebase/firebase';
 import { Line } from 'rc-progress';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const infoHeader = css`
     display: flex;
@@ -48,6 +48,7 @@ const pointBox = css`
 `
 
 function Mypage(props) {
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const principalState = queryClient.getQueryState("getPrincipal");
     const principal = principalState?.data?.data;
@@ -160,7 +161,8 @@ function Mypage(props) {
                         }
                     </div>
                     <div css={pointBox}>
-                        누적 포인트: 0원
+                        <h3>누적 포인트: {principal.userPoint} Point</h3>
+                        <button onClick={() => {navigate("/store/products");}}>포인트 구매</button>
                     </div>
                 </div>
                 <div>

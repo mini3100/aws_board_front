@@ -8,6 +8,9 @@ import AuthRoute from './components/Routes/AuthRoute';
 import AccountRoute from './components/Routes/AccountRoute';
 import BoardWrite from './pages/BoardWrite/BoardWrite';
 import BoardList from './pages/BoardList/BoardList';
+import BoardDetails from './pages/BoardDetails/BoardDetails';
+import PointStore from './pages/PointStore/PointStore';
+import BoardEdit from './pages/BoardEdit/BoardEdit';
 
 function App() {
 
@@ -40,8 +43,11 @@ function App() {
         <Route path='/account/*' element={<AccountRoute />} />
         {/* :category - 매개변수(카테고리 종류마다 텍스트 달라지게) */}
         <Route path='/board/write' element={<BoardWrite/>} />
+        <Route path='/board/edit/:boardId' element={<BoardEdit/>} />
         <Route path='/board/:category/:page' element={<BoardList />} />
         <Route path='/board/:category/edit' element={<></>} />
+        <Route path="/board/:boardId" element={ <BoardDetails /> } />
+        <Route path="/store/products" element={ <PointStore /> } />
       </Routes>
     </RootLayout>
   );

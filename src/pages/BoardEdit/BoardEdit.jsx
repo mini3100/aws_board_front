@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RootContainer from '../../components/RootContainer/RootContainer';
-import ReactQuill from 'react-quill';
-import { useEffect } from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import Select from 'react-select';
-import { useState } from 'react';
-import { instance } from '../../api/config/instance';
+import ReactQuill from 'react-quill';
 import { useQuery, useQueryClient } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { instance } from '../../api/config/instance';
 
 const buttonContainer = css`
     display: flex;
@@ -35,50 +33,74 @@ const titleInput = css`
     height: 38px;
 `;
 
-function BoardWrite(props) {
+function BoardEdit(props) {
     const navigate = useNavigate();
+
+    const [ categories, setCategories ] = useState([]);
+    const [ newCategory, setNewCategory ] = useState("");
+
+    const [ selectOptions, setSelectOptions ] = useState([]);
+    const [ selectedOption, setSelectedOption ] = useState(selectOptions[0]);
+    
+    const { boardId } = useParams();
     const [ boardContent, setBoardContent ] = useState({
         title: "",
         content: "",
         categoryId: 0,
         categoryName: ""
     });
-    
-    const [ categories, setCategories ] = useState([]);
-    const [ newCategory, setNewCategory ] = useState("");
-    const [ selectOptions, setSelectOptions ] = useState([]);
-    const [ selectedOption, setSelectedOption ] = useState(selectOptions[0]);
 
     const queryClient = useQueryClient();
     const principal = queryClient.getQueryState("getPrincipal");
-    
+
+    const getBoard = useQuery(["getBoard"], async () => {
+        try {
+            return await instance.get(`/board/${boardId}`);
+        }catch(error) {
+            alert("해당 게시글을 불러올 수 없습니다.");
+            navigate("/");
+        }
+    }, {
+        refetchOnWindowFocus: false,
+        onSuccess: response => {
+            setBoardContent({
+                ...boardContent,
+                title: response.data.boardTitle,
+                content: response.data.boardContent,
+            })
+            const category = selectOptions.filter(option => option.value === response.data.boardCategoryId)[0];
+            setSelectedOption(category);
+        },
+        enabled: selectOptions.length > 0   // options를 가지고 왔으면 enabled가 true
+    });
+
     useEffect(() => {
-        if(!principal.data) {
+        const principal = queryClient.getQueryState("getPrincipal");
+
+        if (!principal.data) { //로그인 자체가 안된 상태일 경우
             alert("로그인 후 게시글을 작성하세요.");
             window.location.replace("/");
             return;
         }
-
-        if(!principal.data.data.enabled) {
+        if (!principal?.data?.data.enabled) { //이메일 인증이 안된 유저이면
             alert("이메일 인증 후 게시글을 작성하세요.");
             window.location.replace("/account/mypage");
-            return;
         }
     }, []);
 
     useEffect(() => {
         instance.get("/board/categories")
-        .then((response) => {
-            setCategories(response.data);
-            setSelectOptions(
-                response.data.map(
-                    category => { 
-                        return { value: category.boardCategoryId, label: category.boardCategoryName }
-                    }
+            .then((response) => {
+                setCategories(response.data);
+                setSelectOptions(
+                    response.data.map(
+                        category => {
+                            return { value: category.boardCategoryId, label: category.boardCategoryName }
+                        }
+                    )
                 )
-            );
-        })
-    }, []);
+            })
+    }, [])
 
     useEffect(() => {
         if(!!newCategory) {
@@ -137,33 +159,26 @@ function BoardWrite(props) {
         setNewCategory(categoryName);
     }
 
-    const handleWriteSubmit = async () => {
-        if(window.confirm("글 작성시 500포인트가 차감됩니다. 작성하시겠습니까?")) {
-            queryClient.refetchQueries(["getPrincipal"]);
-            if(principal?.data?.data?.userPoint < 500) {
-                alert("포인트가 부족합니다!");
-                window.open("/store/products");
-                return;
-            }
-            try {
-                const option = {
-                    headers: {
-                      Authorization: localStorage.getItem("accessToken")
-                    }
+    const handleEditSubmit = async () => {
+        try {
+            const option = {
+                headers: {
+                    Authorization: localStorage.getItem("accessToken")
                 }
-                await instance.post("/board/content", boardContent, option);
-                queryClient.refetchQueries(["getPrincipal"]);
-                navigate(`/board/${boardContent.categoryName}/1`);
-            } catch (error) {
-                console.error(error)
             }
+            await instance.put(`/board/${boardId}`, boardContent, option);
+            // queryClient.refetchQueries(["getPrincipal"]);
+            alert("수정이 완료되었습니다!");
+            navigate(`/board/${boardId}`);
+        } catch (error) {
+            console.error(error)
         }
     }
 
     return (
         <RootContainer>
             <div>
-                <h2>게시글 작성</h2>
+                <h2>게시글 수정</h2>
                 <div css={categoryContainer}>
                     <div css={selectBox}>
                         <Select 
@@ -174,19 +189,20 @@ function BoardWrite(props) {
                     </div>
                     <button onClick={handleAddCategory}>카테고리 추가</button>
                 </div>
-                <div><input type="text" name='title' placeholder='제목' onChange={handleTitleInput} css={titleInput}/></div>
+                <div><input type="text" name='title' placeholder='제목' onChange={handleTitleInput} css={titleInput} value={boardContent.title}/></div>
                 <div>
                     <ReactQuill 
                         style={{width: "918px", height: "460px"}} 
                         modules={modules} 
-                        onChange={handleContentInput} />
+                        onChange={handleContentInput}
+                        value={boardContent.content} />
                 </div>
                 <div css={buttonContainer}>
-                    <button onClick={handleWriteSubmit}>작성하기</button>
+                    <button onClick={handleEditSubmit}>수정하기</button>
                 </div>
             </div>
         </RootContainer>
     );
 }
 
-export default BoardWrite;
+export default BoardEdit;
